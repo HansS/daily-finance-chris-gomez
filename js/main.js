@@ -26,11 +26,5 @@ $(window).resize(_.debounce(function() {
     var footerHeight = $('#footer').outerHeight();
     var workspaceHeight = windowHeight - (headerHeight + footerHeight) + 'px';
 
-    console.log(windowHeight, headerHeight, footerHeight, workspaceHeight);
-
-    //console.log(workspaceHeight); return;
-
     $('#workspace').css({ height: workspaceHeight });
-
-    console.log($('#workspace').css('height'));
 }, 300));
