@@ -1,7 +1,33 @@
 .binder { position:relative; }
 
-.data-entry { padding:10px; text-align:center; color:#fff; background:#333; }
-.data-entry h1 { font-size:3.2em; font-style:italic; font-family:serif; color:#ccc; }
-.data-entry form { margin:0px; letter-spacing:5px; }
-.data-entry .dolla-sign { font-size:2em; font-weight:bold; vertical-align:middle; }
-.data-entry .no-space { letter-spacing:initial; }
+/* Contain floats: h5bp.com/q */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }
+
+.alt-font { font-style:italic; font-family:serif; }
+
+.data-entry { padding:10px; color:#fff; background:#333; }
+.data-entry h1 { margin-bottom:5px; text-align:center; font-size:3.2em; color:#ccc; }
+.data-entry label { float:none; display:block; width:auto; line-height:2.0em; text-align:left; color:#888; }
+.data-entry .digits { width:40px; text-align:right; }
+.data-entry .section { float:left; margin-right:20px; }
+.data-entry .dollar-sign { font-size:2em; font-weight:bold; vertical-align:middle; }
+.data-entry .post-btn { margin-left:10px; }
+.data-entry #transaction-entry { width:715px; margin:0px auto; }
+
+.full-height-column-container { float:left; width:100%; overflow:hidden; }
+.full-height-column-container { background-color:#C43C35 } /* FIX: 50% 1px shy bug */
+.full-height-column { padding-bottom:10000px; margin-bottom:-10000px; }
+
+.wallet,
+.collectors { float:left; width:50%; }
+
+.wallet { background:#57A957; }
+
+.collectors { background:#C43C35; }
+
+.functions { clear:both; padding:0 10px; background:#666; }
+.functions .pills-label { float:left; margin:0 10px 0 0; line-height:3em; color:#ccc; }
+.functions .pills { float:left; margin-bottom:0; }
+.functions .btn { float:right; margin:6px 0 0 0; vertical-align:middle; }

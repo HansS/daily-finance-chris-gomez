@@ -36,22 +36,65 @@
 
     <div class="binder">
 
-        <div class="data-entry">
-            <h1>Manage your money!</h1>
-            <form id="transaction-entry">
-                <span class="dolla-sign">$</span>
-                <input type="text" />
-                <select>
-                    <option>Add a Category</option>
-                </select>
-                <button class="btn danger">Expense</button>
-                <span class="no-space">-or-<span>
-                <button class="btn success">Deposit</button>
-            </form>
+        <div id="header" class="data-entry">
+            <h1 class="alt-font">Manage your money!</h1>
+            <div id="transaction-entry" class="clearfix">
+
+                <div class="section">
+                    <label>Operation:</label>
+                    <select class="span2">
+                        <option>Deposit</option>
+                        <option>Debit</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <label>Amount:</label>
+                    <span class="dollar-sign">$</span>
+                    <input class="digits" type="text" />
+                </div>
+
+                <div class="section">
+                    <label>Category:</label>
+                    <select class="span2">
+                        <option>Category</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Description:</label>
+                    <input class="span4" type="text" />
+                    <button class="btn post-btn success">Post this transaction</button>
+                </div>
+
+            </div>
         </div>
 
-        <div class="wallet">
+        <div id="workspace" class="full-height-column-container">
+            <div class="wallet full-height-column">
+                a
+            </div>
 
+            <div class="collectors full-height-column">
+                b
+            </div>
+        </div>
+
+        <div id="footer" class="functions clearfix">
+            <div class="pills-label">Scope:</div>
+            <ul class="pills">
+                <li class="active">
+                    <a href="#">Day</a>
+                </li>
+                <li>
+                    <a href="#">Month</a>
+                </li>
+                <li>
+                    <a href="#">Year</a>
+                </li>
+            </ul>
+
+            <button class="btn">Add Category</button>
         </div>
 
     </div>
