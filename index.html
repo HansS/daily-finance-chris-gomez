@@ -6,28 +6,48 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/main.css">
-
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
-    <script type="text/javascript" href="./js/json2.js"></script>
-    <script type="text/javascript" href="./js/underscore.min.js"></script>
-    <script type="text/javascript" href="./js/backbone.min.js"></script>
-    <script type="text/javascript" href="./js/d3.js"></script>
-    <script type="text/javascript" href="./js/jquery.1.7.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Vendor Styles -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+
+    <!-- Internal Styles -->
+    <link rel="stylesheet" href="./css/main.css">
+
+    <!-- Vendor Scripts -->
+    <script type="text/javascript" src="./js/json2.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="./js/underscore-min.js"></script>
+    <script type="text/javascript" src="./js/backbone-min.js"></script>
+    <script type="text/javascript" src="./js/d3.js"></script>
+
+    <!-- Internal Scripts -->
+    <script type="text/javascript" src="./js/main.js"></script>
 </head>
 
 <body>
 
     <div class="binder">
+
+        <div class="data-entry">
+            <h1>Manage your money!</h1>
+            <form id="transaction-entry">
+                <span class="dolla-sign">$</span>
+                <input type="text" />
+                <select>
+                    <option>Add a Category</option>
+                </select>
+                <button class="btn danger">Withdrawl</button>
+                <button class="btn success">Deposit</button>
+            </form>
+        </div>
 
     </div>
 

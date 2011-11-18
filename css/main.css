@@ -1,0 +1,6 @@
+.binder { position:relative; }
+
+.data-entry { padding:10px; text-align:center; color:#fff; background:#333; }
+.data-entry h1 { font-size:3.2em; font-style:italic; font-family:serif; color:#ccc; }
+.data-entry form { margin:0px; letter-spacing:5px; }
+.data-entry .dolla-sign { font-size:2em; font-weight:bold; vertical-align:middle; }
