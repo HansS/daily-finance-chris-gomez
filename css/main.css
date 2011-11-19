@@ -14,18 +14,20 @@
 .data-entry .section { float:left; margin-right:20px; }
 .data-entry .dollar-sign { font-size:2em; font-weight:bold; vertical-align:middle; }
 .data-entry .post-btn { margin-left:10px; }
-.data-entry #transaction-entry { width:715px; margin:0px auto; }
+.data-entry form { display:block; width:800px; margin:0px auto; }
 
 .full-height-column-container { float:left; width:100%; overflow:hidden; }
 .full-height-column-container { background-color:#C43C35 } /* FIX: 50% 1px shy bug */
 .full-height-column { padding-bottom:10000px; margin-bottom:-10000px; }
 
-.wallet,
-.collectors { float:left; width:50%; }
+.accounts { float:left; width:50%; }
+.accounts ul li { color:#000; list-style:none; }
 
-.wallet { background:#57A957; }
+.credit { background:#57A957; }
+.credit ul li { clear:both; float:left; }
 
-.collectors { background:#C43C35; }
+.debit { background:#C43C35; }
+.debit ul li { clear:both; float:right; }
 
 .functions { clear:both; padding:0 10px; background:#666; }
 .functions .pills-label { float:left; margin:0 10px 0 0; line-height:3em; color:#ccc; }
