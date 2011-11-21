@@ -87,9 +87,13 @@ var TransactionLog = Backbone.Collection.extend({
             })
         }
 
+        model.set({
+            timestamp: model.get('created_at').getTime()
+        })
+
         var account = App.accounts.getByCid(model.get('account_cid'));
         var date = moment(model.get('created_at'));
-        console.log(account.attributes);
+
         // Create some helper values for the view
         model.set({
             account_name: account.get('name'),
@@ -99,7 +103,7 @@ var TransactionLog = Backbone.Collection.extend({
             display_amount:
                 (model.get('type') == 'debit' ? '-' : '+') + ' $' + model.get('amount')
         })
-        console.log('!', model.attributes)
+
 
     },
     createTransactionRecord: function(model)
@@ -351,6 +355,9 @@ var TransactionRecord = Backbone.View.extend({
  **/
 var TransactionWall = Backbone.View.extend({
     el: '#transaction-wall',
+    events: {
+        'click .register-click': 'displayHistory'
+    },
     initialize: function()
     {
         // Pretty up the standard scrollbars
@@ -416,6 +423,10 @@ var TransactionWall = Backbone.View.extend({
 
         // Let the scrollbar plugin know that it likely has a new height
         $(this.el).data('jsp').reinitialise()
+    },
+    displayHistory: function()
+    {
+        var timestamp = $(this.el).find('.timestamp').text();
     }
 })
 

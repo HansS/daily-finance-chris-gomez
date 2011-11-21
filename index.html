@@ -168,13 +168,16 @@
     </script>
 
     <script id="transaction-template" type="text/html">
-        <div class="section date">
-            <div class="month" data-bind="created_month"></div>
-            <div class="date" data-bind="created_date"></div>
+        <div class="register-click clearfix">
+            <div class="section date">
+                <div class="month" data-bind="created_month"></div>
+                <div class="date" data-bind="created_date"></div>
+            </div>
+            <p class="section account" data-bind="account_name">asdf</p>
+            <p class="section description" data-bind="description"></p>
+            <div class="section amount" data-bind="display_amount"></div>
+            <div class="hide" data-bind="timestamp"></div>
         </div>
-        <p class="section account" data-bind="account_name">asdf</p>
-        <p class="section description" data-bind="description"></p>
-        <div class="section amount" data-bind="display_amount"></div>
     </script>
 
 </body>

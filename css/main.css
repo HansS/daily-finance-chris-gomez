@@ -62,6 +62,8 @@ body { min-width:960px; background:url('../image/bg-tile.jpg');}
 .log .transaction .account { margin:0 0 0 10px; width:100px; line-height:2.0em; }
 .log .transaction .description { margin:0; line-height:2.0em; color:#999; }
 .log .transaction .amount { float:right; font-size:1.5em; line-height:1.5em; }
+.log .transaction { cursor:pointer; }
+.log .transaction:hover { background-color:rgba(0,0,0,.5); }
 
 /* Accounts */
 
