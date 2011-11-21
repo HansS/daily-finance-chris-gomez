@@ -7,13 +7,12 @@
  **/
 var Transaction = Backbone.Model.extend({
     defaults: {
-        type: 'credit',
-        amount: '00.00',
+        type: 'debit',
+        amount: '',
         description: ''
     },
     initialize: function()
     {
-
         var accounts = App.accounts.getByType(this.get('type'));
 
         var firstAccountCid = accounts[0].cid;
@@ -36,17 +35,18 @@ var Account = Backbone.Model.extend({
     initialize: function()
     {
     },
-    deposit: function(amount)
+    deposit: function(amount, options)
     {
 
         var amount = parseFloat(amount, 10);
         var balance = this.get('balance');
         var total = balance + amount;
+
         this.set({
             balance: total
         });
     },
-    withdraw: function(amount)
+    withdraw: function(amount, options)
     {
         var amount = parseFloat(amount, 10);
         var balance = this.get('balance');
@@ -66,20 +66,41 @@ var TransactionLog = Backbone.Collection.extend({
     model: Transaction,
     initialize: function()
     {
-        this.bind('add', this.tagDateOnAdd, this);
+        this.bind('add', this.fillInBlanksOnAdd, this);
         this.bind('add', this.createTransactionRecord, this);
         this.bind('add', this.distributeFunds, this);
     },
-    tagDateOnAdd: function(model)
+    fillInBlanksOnAdd: function(model)
     {
-        // We likely wanted to override the auto date tagging
-        if (model.has('created_at')) {
-            return;
+        // We can't use defaults: because they're bound to the view
+        // Don't want the user to have to undo them to enter data
+        if (! model.has('description')) {
+            model.set({
+                description: '-'
+            });
         }
 
+        // Sometimes we set it manually before here
+        if (! model.has('created_at')) {
+            model.set({
+                created_at: new Date()
+            })
+        }
+
+        var account = App.accounts.getByCid(model.get('account_cid'));
+        var date = moment(model.get('created_at'));
+        console.log(account.attributes);
+        // Create some helper values for the view
         model.set({
-            created_at: new Date()
+            account_name: account.get('name'),
+            created_date: date.date(),
+            created_month: date.format('MMM'),
+            created_year: date.year(),
+            display_amount:
+                (model.get('type') == 'debit' ? '-' : '+') + ' $' + model.get('amount')
         })
+        console.log('!', model.attributes)
+
     },
     createTransactionRecord: function(model)
     {
@@ -91,6 +112,7 @@ var TransactionLog = Backbone.Collection.extend({
     {
         App.accounts.silentlyZeroBalances();
 
+        // Move the money around
         this.each(function(transaction) {
 
             var cid = transaction.get('account_cid');
@@ -105,14 +127,26 @@ var TransactionLog = Backbone.Collection.extend({
 
                 _(creditAccounts).each(function(account) {
                     var portion = split.shift();
-                    account.withdraw(portion)
+                    account.withdraw(portion, { silent: true })
                 })
             }
 
             // Deposit the money
-            account.deposit(transaction.get('amount'));
-
+            account.deposit(transaction.get('amount'), { silent: true });
         });
+
+        var totals = {
+            'credit': 0,
+            'debit': 0
+        }
+
+        // Add up the final numbers
+        App.accounts.each(function(account) {
+            totals[account.get('type')] += account.get('balance');
+        })
+
+        $('#money-out-the-door').text(totals.debit);
+        $('#money-in-the-bank').text(totals.credit);
     }
 })
 
@@ -142,9 +176,11 @@ var Bank = Backbone.Collection.extend({
     createAccountStatus: function(model)
     {
         // Create the AccountStatus view
-        new AccountStatus({
+        var view = new AccountStatus({
             model: model
         })
+
+        App.accountViews.push(view);
     },
     silentlyZeroBalances: function()
     {
@@ -186,8 +222,7 @@ var FeatureBar = Backbone.View.extend({
         var li = $(e.currentTarget)
         li.addClass('active');
 
-        var scope = li.find('a').text().toLowerCase();
-        console.log(scope)
+        var scope = li.find('.pill').text().toLowerCase();
 
         App.transactionWall.setScope(scope)
     },
@@ -205,6 +240,8 @@ var FeatureBar = Backbone.View.extend({
             name: nameInput.val(),
             type: typeInput.val()
         })
+
+        App.transactionForm.updateAccountOptions();
 
         $('#category-modal').modal('hide');
     }
@@ -244,8 +281,45 @@ var AccountStatus = Backbone.View.extend({
     },
     render: function() {
         var li = $(this.el);
-        //li.css({backgroundColor: this.model.get('color')})
-        li.css({backgroundColor: '#0f0'})
+        var availableHeight = $('#income-scale').outerHeight();
+        var availableWidth = $(this.el).parent().parent().width();
+        var accounts = App.accounts.getByType(this.model.get('type'));
+        var currentBalance = this.model.get('balance');
+        var totalBalance = 0;
+
+        // Add up the total balance
+        _(accounts).each(function(account) {
+            totalBalance += account.get('balance');
+        });
+
+        // Find out how much our balance represents of all the accounts
+        // of the same type
+        if (currentBalance == 0 || totalBalance == 0) {
+            var percentageOfBalance = 0;
+        } else {
+            var percentageOfBalance = (currentBalance / totalBalance);
+        }
+
+        // Get a pixel value using the percentage (minus borders)
+        var relativeWidth =
+            (availableWidth * percentageOfBalance)
+            - ($(this.el).outerWidth() - $(this.el).width())
+
+
+        // Split the available vertical space evenly (minus borders)
+        var equalHeight =
+            (availableHeight / accounts.length)
+            - ($(this.el).outerHeight(true) - $(this.el).height())
+
+        // Split the vertical space evenly
+        li.find('.bar').animate({
+            height: equalHeight + 'px',
+            width: relativeWidth + 'px'
+        }, {
+            duration: 500,
+            queue: false
+        })
+
     }
 })
 
@@ -256,6 +330,7 @@ var AccountStatus = Backbone.View.extend({
  **/
 var TransactionRecord = Backbone.View.extend({
     tagName: 'div',
+    className: 'transaction clearfix',
     initialize: function()
     {
         // Add the markup to this.el
@@ -280,7 +355,8 @@ var TransactionWall = Backbone.View.extend({
     {
         // Pretty up the standard scrollbars
         $(this.el).jScrollPane({
-            hideFocus: true
+            hideFocus: true,
+            verticalGutter: 10,
         });
 
         this.pane = $(this.el).find('.jspPane');
@@ -315,7 +391,7 @@ var TransactionWall = Backbone.View.extend({
 
         if (! $(yearHeadingId).length) {
             $(this.pane).prepend(
-                '<h3 class="year-heading" id="heading-' + yearKey + '">'
+                '<h3 class="year-heading alt-font" id="heading-' + yearKey + '">'
                     + moment(date).format('YYYY')
                 + '</h3>')
 
@@ -323,14 +399,14 @@ var TransactionWall = Backbone.View.extend({
 
         if (! $(monthHeadingId).length) {
             $(yearHeadingId).after(
-                '<h3 class="month-heading" id="heading-' + monthKey + '">'
+                '<h3 class="month-heading alt-font" id="heading-' + monthKey + '">'
                     + moment(date).format('MMMM, YYYY')
                 + '</h3>')
         }
 
         if (! $(dayHeadingId).length) {
             $(monthHeadingId).after(
-                '<h3 class="day-heading" id="heading-' + dayKey + '">'
+                '<h3 class="day-heading alt-font" id="heading-' + dayKey + '">'
                     + moment(date).format('dddd, MMMM Do YYYY')
                 + '</h3>')
         }
@@ -417,6 +493,7 @@ var TransactionForm = Backbone.View.extend({
 function DailyFinance()
 {
 }
+DailyFinance.prototype.accountViews = [];
 DailyFinance.prototype.accounts = new Bank();
 DailyFinance.prototype.transactions = new TransactionLog();
 DailyFinance.prototype.initialize = function()
@@ -424,56 +501,49 @@ DailyFinance.prototype.initialize = function()
     // Initial render();
     this.render();
 
-    // Rerender at a decent interval
+    // Times when we'll want to rerender
     $(window).resize(_.debounce(this.render, 300));
+    this.accounts.bind('add', this.render, this);
+    //this.accounts.bind('change:balance', this.render, this);
 
     // Create the default accounts
     // Restaurants, Groceries, Work Expenses,
     // Entertainment, Paycheques, Rent, Utilities
     this.accounts.add({
         type: 'credit',
-        name: 'Paycheques',
-        color: '#17370f'
+        name: 'Paycheques'
     });
     this.accounts.add({
         type: 'credit',
-        name: 'Freelance',
-        color: '#17370f'
+        name: 'Freelance'
     });
     this.accounts.add({
         type: 'credit',
-        name: 'Lottery',
-        color: '#17370f'
+        name: 'Lottery'
     });
     this.accounts.add({
         type: 'debit',
-        name: 'Restaurants',
-        color: '#81f23e'
+        name: 'Restaurants'
     });
     this.accounts.add({
         type: 'debit',
-        name: 'Groceries',
-        color: '#10fe23'
+        name: 'Groceries'
     });
     this.accounts.add({
         type: 'debit',
-        name: 'Work Expenses',
-        color: '#a3d20f'
+        name: 'Work Expenses'
     });
     this.accounts.add({
         type: 'debit',
-        name: 'Entertainment',
-        color: '#93ab12'
+        name: 'Entertainment'
     });
     this.accounts.add({
         type: 'debit',
-        name: 'Rent',
-        color: '#0f12ef'
+        name: 'Rent'
     });
     this.accounts.add({
         type: 'debit',
-        name: 'Utilities',
-        color: '#9f293a'
+        name: 'Utilities'
     });
 
     // Setup any predefined Views that need to wait for DOM ready
@@ -535,7 +605,11 @@ DailyFinance.prototype.runScriptedUser = function()
         var transaction = _.clone(accountsByCid[accountCid]);
         transaction.amount = amount;
         transaction.description = description;
-        transaction.created_at = date;
+
+        // Causes .has() to fail otherwise
+        if (date) {
+            transaction.created_at = date;
+        }
 
         queue.push(transaction);
     }
@@ -561,6 +635,10 @@ DailyFinance.prototype.runScriptedUser = function()
     enqueu('c2', 2000, new Date(2011, 1, 2));
     enqueu('c3', 5000, new Date(2011, 2, 1));
     enqueu('d1', 100.55, new Date(2011, 2, 1));
+    enqueu('c1', 1000);
+    enqueu('c2', 2000);
+    enqueu('c3', 5000);
+    enqueu('d1', 100.55);
     //enqueu('d1', 500);
     //enqueu('c1', 250);
     //enqueu('d1', 500);
@@ -573,7 +651,10 @@ DailyFinance.prototype.render = function()
     var windowHeight = $(window).height();
     var headerHeight = $('#header').outerHeight();
     var footerHeight = $('#footer').outerHeight();
-    var workspaceHeight = windowHeight - (headerHeight + footerHeight) + 'px';
+    // Had to add in padding by hand.. running out of time
+    // Don't ask how I got to 46
+    var workspaceHeight =
+        windowHeight - (headerHeight + footerHeight + 40) + 'px';
 
     $('#income-scale').css({ height: workspaceHeight });
     $('#transaction-wall').css({ height: workspaceHeight });
@@ -581,6 +662,12 @@ DailyFinance.prototype.render = function()
     if (App.transactionWall) {
         $(App.transactionWall.el).data('jsp').reinitialise()
     }
+
+    _(App.accountViews).each(function(view) {
+        view.render();
+    });
+
+    console.log('>>> Rendered!')
 }
 DailyFinance.prototype.util = {
     divideEvenly: function(amount, divisor)
@@ -607,7 +694,7 @@ window.App = new DailyFinance();
 // Start the program
 $(document).ready(function()
 {
-    console.log('Ready!');
+    console.log('>>> Ready!');
     App.initialize();
 });
 

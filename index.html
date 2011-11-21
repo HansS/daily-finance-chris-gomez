@@ -42,7 +42,7 @@
 
     <div class="binder">
 
-        <div id="header" class="data-entry">
+        <div id="header" class="data-entry clearfix">
             <h1 class="alt-font">Manage your money!</h1>
             <form id="transaction-form" class="clearfix">
 
@@ -57,7 +57,7 @@
                 <div class="section">
                     <label>Amount:</label>
                     <span class="dollar-sign">$</span>
-                    <input id="amount" class="digits" type="text" />
+                    <input id="amount" class="digits" type="text" placeholder="X.XX" />
                 </div>
 
                 <div class="section">
@@ -67,8 +67,8 @@
                 </div>
 
                 <div>
-                    <label>Description:</label>
-                    <input id="description" class="span4" type="text" />
+                    <label>Note:</label>
+                    <input id="description" class="span4" type="text" placeholder="ex: concert tickets, lunch, etc.." />
 
                     <!-- Submit -->
                     <button class="btn post-btn success">Post this transaction</button>
@@ -77,16 +77,24 @@
             </form>
         </div>
 
-        <div id="workspace">
+        <div id="workspace" class="clearfix">
+            <div id="status-bar" class="clearfix">
+                <div class="saved">
+                    <span>$<span id="money-in-the-bank"></span></span>, Saved
+                </div>
+                <div class="spent">
+                    <span>$<span id="money-out-the-door"></span></span>, Spent
+                </div>
+            </div>
             <div id="transaction-wall" class="log unstyled scroll-pane-arrows">
             </div>
             <div id="income-scale" class="full-height-column-container">
                 <div class="accounts credit full-height-column">
-                    <ul id="credit-accounts" class="unstyled">
+                    <ul id="credit-accounts" class="clearfix unstyled">
                     </ul>
                 </div>
                 <div class="accounts debit full-height-column">
-                    <ul id="debit-accounts" class="unstyled">
+                    <ul id="debit-accounts" class="clearfix unstyled">
                     </ul>
                 </div>
             </div>
@@ -94,16 +102,16 @@
 
         <div id="footer">
             <div id="feature-bar" class="features clearfix">
-                <div class="pills-label">Scope:</div>
+                <div class="pills-label">Group By:</div>
                 <ul id="scope-select" class="pills">
                     <li class="active">
-                        <a href="#">Day</a>
+                        <span class="pill">Day</span>
                     </li>
                     <li>
-                        <a href="#">Month</a>
+                        <span class="pill">Month</span>
                     </li>
                     <li>
-                        <a href="#">Year</a>
+                        <span class="pill">Year</span>
                     </li>
                 </ul>
 
@@ -124,7 +132,7 @@
                             <div class="clearfix">
                                 <label for="category_name">Name:</label>
                                 <div class="input">
-                                    <input id="category_name" type="text" />
+                                    <input id="category_name" type="text" placeholder="ex: Charity, Lunch, etc.." />
                                 </div>
                             </div>
 
@@ -132,8 +140,8 @@
                                 <label for="category_type">Type:</label>
                                 <div class="input">
                                     <select id="category_type">
-                                        <option value="credit">Income</option>
                                         <option value="debit">Expense</option>
+                                        <option value="credit">Income</option>
                                     </select>
                                 </div>
                             </div>
@@ -152,21 +160,21 @@
     </div>
 
     <script id="account-status-template" type="text/html">
-        <span data-bind="name"></span>
-        <span data-bind="balance"></span>
+        <div class="bar"></div>
+        <div class="meta">
+            <span class="name alt-font" data-bind="name"></span>
+            <div class="balance">($<span data-bind="balance"></span>)</div>
+        </div>
     </script>
 
     <script id="transaction-template" type="text/html">
-        <dl>
-            <dt>Transaction:</dt>
-            <dd>
-                Amount: <span data-bind="amount"></span><br />
-                Type: <span data-bind="type"></span><br />
-                Category CID: <span data-bind="account_cid"></span><br />
-                Description: <span data-bind="description"></span><br />
-                Recorded: <span data-bind="created_at"></span>
-            </dd>
-        </dl>
+        <div class="section date">
+            <div class="month" data-bind="created_month"></div>
+            <div class="date" data-bind="created_date"></div>
+        </div>
+        <p class="section account" data-bind="account_name">asdf</p>
+        <p class="section description" data-bind="description"></p>
+        <div class="section amount" data-bind="display_amount"></div>
     </script>
 
 </body>

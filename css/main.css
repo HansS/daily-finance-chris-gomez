@@ -1,52 +1,107 @@
-.binder { position:relative; }
+/* Body/Background */
 
-/* Contain floats: h5bp.com/q */
+body { min-width:960px; background:url('../image/bg-tile.jpg');}
+.binder { position:relative; background:url('../image/bg-light.jpg') center top no-repeat; }
+#transaction-wall {}
+
+/* Hacks */
+
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { *zoom: 1; }
 
 .alt-font { font-style:italic; font-family:serif; }
 
-.data-entry { padding:10px; color:#fff; background:#333; }
-.data-entry h1 { margin-bottom:5px; text-align:center; font-size:3.2em; color:#ccc; }
-.data-entry label { float:none; display:block; width:auto; line-height:2.0em; text-align:left; color:#888; }
+/* Form */
+
+.data-entry { padding:10px; color:#fff; background:rgba(255,255,255,.2); border-bottom:1px solid #444; }
+.data-entry h1 { margin-bottom:0px; text-align:center; font-size:3.2em; color:#ccc; }
+.data-entry label { float:none; display:block; width:auto; line-height:2.0em; text-align:left; color:#999; }
 .data-entry .digits { width:40px; text-align:right; }
 .data-entry .section { float:left; margin-right:20px; }
 .data-entry .dollar-sign { font-size:2em; font-weight:bold; vertical-align:middle; }
 .data-entry .post-btn { margin-left:10px; }
-.data-entry form { display:block; width:800px; margin:0px auto; }
+.data-entry form { display:block; margin:0px auto 10px; width:800px; }
 
-.full-height-column-container { float:left; width:100%; overflow:hidden; }
-.full-height-column-container { background-color:#C43C35 } /* FIX: 50% 1px shy bug */
+#workspace { position:relative;  }
+
+.full-height-column-container { float:left; width:100%; overflow:hidden;  }
+.full-height-column-container {  } /* FIX: 50% 1px shy bug */
 .full-height-column { padding-bottom:10000px; margin-bottom:-10000px; }
 
-#workspace { position:relative; }
+/* Status Bar */
 
-.jspVerticalBar { width:5px; }
+#status-bar { height:38px; background:rgba(255,255,255,.1); border-bottom:1px solid #333;
+    font-size:1.5em; line-height:38px; color:#444; }
+#status-bar .saved { float:left; margin-left:30px;  }
+#status-bar .spent { float:right; margin-right:30px; }
+#status-bar span { color:#999; }
+
+/* Wall */
+
+.jspVerticalBar { width:5px; background:none; }
 .jspVerticalBar .jspTrack { background-color:rgba(0,0,0,.1); }
-.jspVerticalBar .jspTrack .jspDrag { background-color:rgba(0,0,0,0.1); }
+.jspVerticalBar .jspTrack .jspDrag { background-color:rgba(0,0,0,0.5); }
 
-.log { position:absolute; left:50%; top:0px; margin-left:-250px!important; width:500px;
+.log { position:absolute; left:50%; top:40px; margin:0 0 0 -250px!important; width:500px;
     overflow:auto; }
 .log h3 { display:none; margin:0px; }
 .log.day-scope .day-heading { display:block; }
 .log.month-scope .month-heading { display:block; }
 .log.year-scope .year-heading { display:block; }
 
+.log .transaction,
+.log h3 { clear:both; margin:0 2px 2px; color:#ccc; }
+.log h3 { font-weight:normal; color:#666; }
+.log .transaction { padding:5px; border-bottom:1px solid rgba(0,0,0,.2); }
+.log .transaction .section { float:left; }
+.log .transaction .date { width:50px; text-align:center; }
+.log .transaction .date .month { text-transform:uppercase; font-size:0.8em; line-height:0.8em; font-weight:bold; }
+.log .transaction .date .date { font-size:1.5em; line-height:0.9em; font-weight:bold; }
+.log .transaction .date .year { font-size:0.7em; }
+.log .transaction .account { margin:0 0 0 10px; width:100px; line-height:2.0em; }
+.log .transaction .description { margin:0; line-height:2.0em; color:#999; }
+.log .transaction .amount { float:right; font-size:1.5em; line-height:1.5em; }
+
+/* Accounts */
+
 .accounts { float:left; width:50%; }
-.accounts ul li { color:#000; list-style:none; }
+.accounts ul li { position:relative; margin:1px 0 0 0; list-style:none; color:#000; }
+.accounts ul li .bar {
+    border-style:solid; border-color:rgba(87, 169, 87,.25); background:rgba(87, 169, 87,.1); }
+.accounts ul li .meta { margin:10px 0 0 0; width:300px; color:#777; white-space:nowrap; }
+.accounts ul li .meta .name { font-size:2.0em; }
+.accounts ul li .meta .balance { margin:0 0 0 0; }
 
-.credit { background:#57A957 url('../image/plus-pattern.jpg') left top repeat; }
-.credit ul li { clear:both; float:left; }
 
-.debit { background:#C43C35 url('../image/minus-pattern.jpg') right top repeat;; }
-.debit ul li { clear:both; float:right; }
+.credit {  }
+.credit ul li { clear:both; float:left; margin-left:2px; }
+.credit ul li .bar { border-width:0 0 0 20px;  }
+.credit ul li .meta { position:absolute; left:0px; top:0px; }
+.credit ul li .meta .name,
+.credit ul li .meta .balance { float:left; }
+.credit ul li .meta .name { margin-left:30px; }
+.credit ul li .meta .balance { margin:4px 0 0 10px; }
+
+.debit {  }
+.debit ul li { clear:both; float:right; margin-right:2px; }
+.debit ul li .bar { border-width:0 20px 0 0; }
+.debit ul li .meta { position:absolute; right:0px; top:0px; }
+.debit ul li .meta .name,
+.debit ul li .meta .balance { float:right; }
+.debit ul li .meta .name { margin-right:30px; }
+.debit ul li .meta .balance { margin:4px 10px 0 0; }
+
+/* Features */
 
 #footer { clear:both; }
 
-.features { padding:0 10px; background:#666; }
+.features { padding:0 10px; background:rgba(255,255,255,.2); }
 .features .pills-label { float:left; margin:0 10px 0 0; line-height:3em; color:#ccc; }
 .features .pills { float:left; margin-bottom:0; }
+.features .pills .pill { cursor:pointer; }
 .features .btn { float:right; margin:6px 0 0 0; vertical-align:middle; }
+
+/* Hidden */
 
 #category-modal { display:none; }
