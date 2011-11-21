@@ -151,6 +151,11 @@ var TransactionLog = Backbone.Collection.extend({
 
         $('#money-out-the-door').text(totals.debit);
         $('#money-in-the-bank').text(totals.credit);
+
+        /*$(App.accountViews).each(function(index, view) {
+            view.render()
+        })*/
+        App.render()
     }
 })
 
@@ -286,11 +291,11 @@ var AccountStatus = Backbone.View.extend({
     render: function() {
         var li = $(this.el);
         var availableHeight = $('#income-scale').outerHeight();
-        var availableWidth = $(this.el).parent().parent().width();
+        var availableWidth = li.parent().parent().width() - 24; // Minus border
         var accounts = App.accounts.getByType(this.model.get('type'));
         var currentBalance = this.model.get('balance');
         var totalBalance = 0;
-
+        console.log(li.outerWidth() - li.width())
         // Add up the total balance
         _(accounts).each(function(account) {
             totalBalance += account.get('balance');
