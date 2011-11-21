@@ -23,12 +23,15 @@
 #workspace { position:relative; }
 
 .jspVerticalBar { width:5px; }
-.jspVerticalBar .jspTrack { background-color:rgba(255,255,255,0.25); }
-.jspVerticalBar .jspTrack .jspDrag { background-color:rgba(255,255,255,0.25); }
+.jspVerticalBar .jspTrack { background-color:rgba(0,0,0,.1); }
+.jspVerticalBar .jspTrack .jspDrag { background-color:rgba(0,0,0,0.1); }
 
-.history { position:absolute; left:50%; top:0px; margin-left:-250px!important; width:500px;
+.log { position:absolute; left:50%; top:0px; margin-left:-250px!important; width:500px;
     overflow:auto; }
-.history li { color:#000; }
+.log h3 { display:none; margin:0px; }
+.log.day-scope .day-heading { display:block; }
+.log.month-scope .month-heading { display:block; }
+.log.year-scope .year-heading { display:block; }
 
 .accounts { float:left; width:50%; }
 .accounts ul li { color:#000; list-style:none; }

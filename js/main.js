@@ -165,6 +165,7 @@ var FeatureBar = Backbone.View.extend({
     el: '#feature-bar',
     events: {
         //'click #create-category-btn': 'addCategory'
+        'click #scope-select li': 'setScope'
     },
     initialize: function()
     {
@@ -173,8 +174,25 @@ var FeatureBar = Backbone.View.extend({
         $('#create-category-btn').click(this.addCategory);
 
         $('#open-category-modal-btn').click(this.focusOnModalInput);
+
+        App.transactionWall.setScope('day')
     },
-    focusOnModalInput: function() {
+    setScope: function(e)
+    {
+        $('#scope-select li').each(function(i, e) {
+            $(e).removeClass('active');
+        });
+
+        var li = $(e.currentTarget)
+        li.addClass('active');
+
+        var scope = li.find('a').text().toLowerCase();
+        console.log(scope)
+
+        App.transactionWall.setScope(scope)
+    },
+    focusOnModalInput: function()
+    {
         // This should work!
         $('input#category_name').focus();
     },
@@ -261,9 +279,19 @@ var TransactionWall = Backbone.View.extend({
     initialize: function()
     {
         // Pretty up the standard scrollbars
-        $(this.el).jScrollPane();
+        $(this.el).jScrollPane({
+            hideFocus: true
+        });
 
         this.pane = $(this.el).find('.jspPane');
+    },
+    setScope: function(scope)
+    {
+        $(this.el).removeClass('day-scope month-scope year-scope')
+            .addClass(scope + '-scope');
+
+        // Let the scrollbar plugin know that it likely has a new height
+        $(this.el).data('jsp').reinitialise()
     },
     insertRecord: function(transactionRecord)
     {
@@ -287,23 +315,23 @@ var TransactionWall = Backbone.View.extend({
 
         if (! $(yearHeadingId).length) {
             $(this.pane).prepend(
-                '<h1 id="heading-' + yearKey + '">'
+                '<h3 class="year-heading" id="heading-' + yearKey + '">'
                     + moment(date).format('YYYY')
-                + '</h1>')
+                + '</h3>')
 
         }
 
         if (! $(monthHeadingId).length) {
             $(yearHeadingId).after(
-                '<h2 id="heading-' + monthKey + '">'
-                    + moment(date).format('MMMM')
-                + '</h2>')
+                '<h3 class="month-heading" id="heading-' + monthKey + '">'
+                    + moment(date).format('MMMM, YYYY')
+                + '</h3>')
         }
 
         if (! $(dayHeadingId).length) {
             $(monthHeadingId).after(
-                '<h3 id="heading-' + dayKey + '">'
-                    + moment(date).format('dddd')
+                '<h3 class="day-heading" id="heading-' + dayKey + '">'
+                    + moment(date).format('dddd, MMMM Do YYYY')
                 + '</h3>')
         }
 
@@ -526,7 +554,7 @@ DailyFinance.prototype.runScriptedUser = function()
             if (queue.length > 0) {
                 deque()
             }
-        }, 2000);
+        }, 1000);
     }
 
     enqueu('c1', 1000, new Date(2011, 1, 1));
