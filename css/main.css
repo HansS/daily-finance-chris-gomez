@@ -20,13 +20,18 @@
 .full-height-column-container { background-color:#C43C35 } /* FIX: 50% 1px shy bug */
 .full-height-column { padding-bottom:10000px; margin-bottom:-10000px; }
 
+.workspace { position:relative; }
+
+.history { position:absolute; left:50%; top:0px; margin-left:-250px!important; width:500px; }
+.history li { color:#000; }
+
 .accounts { float:left; width:50%; }
 .accounts ul li { color:#000; list-style:none; }
 
-.credit { background:#57A957; }
+.credit { background:#57A957 url('../image/plus-pattern.jpg') left top repeat; }
 .credit ul li { clear:both; float:left; }
 
-.debit { background:#C43C35; }
+.debit { background:#C43C35 url('../image/minus-pattern.jpg') right top repeat;; }
 .debit ul li { clear:both; float:right; }
 
 .functions { clear:both; padding:0 10px; background:#666; }

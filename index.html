@@ -29,7 +29,6 @@
     <script type="text/javascript" src="./js/backbone-min.js"></script>
     <script type="text/javascript" src="./js/backbone.modelbinding.min.js"></script>
     <script type="text/javascript" src="./js/d3.js"></script>
-    <script type="text/javascript" src="./js/dust-full-0.3.0.js"></script>
 
     <!-- Internal Scripts -->
     <script type="text/javascript" src="./js/main.js"></script>
@@ -45,7 +44,7 @@
 
                 <div class="section">
                     <label>Type:</label>
-                    <select id="account_type" class="span2">
+                    <select id="type" class="span2">
                         <option value="credit">Deposit</option>
                         <option value="debit">Expense</option>
                     </select>
@@ -74,15 +73,18 @@
             </form>
         </div>
 
-        <div id="workspace" class="full-height-column-container">
-            <div class="accounts credit full-height-column">
-                <ul id="credit-categories" class="unstyled">
-                </ul>
-            </div>
-
-            <div class="accounts debit full-height-column">
-                <ul id="debit-categories" class="unstyled">
-                </ul>
+        <div class="workspace">
+            <ul id="transaction-history" class="history unstyled">
+            </ul>
+            <div id="income-scale" class="full-height-column-container">
+                <div class="accounts credit full-height-column">
+                    <ul id="credit-accounts" class="unstyled">
+                    </ul>
+                </div>
+                <div class="accounts debit full-height-column">
+                    <ul id="debit-accounts" class="unstyled">
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -106,10 +108,20 @@
     </div>
 
     <script id="account-status-template" type="text/html">
-    <li>
         <span data-bind="name"></span>
         <span data-bind="balance"></span>
-    </li>
+    </script>
+
+    <script id="transaction-template" type="text/html">
+        <dl>
+            <dt>Transaction:</dt>
+            <dd>
+                Amount: <span data-bind="amount"></span><br />
+                Type: <span data-bind="type"></span><br />
+                Category CID: <span data-bind="account_cid"></span><br />
+                Description: <span data-bind="description"></span>
+            </dd>
+        </dl>
     </script>
 
 </body>
