@@ -525,14 +525,6 @@ DailyFinance.prototype.initialize = function()
         name: 'Paycheques'
     });
     this.accounts.add({
-        type: 'credit',
-        name: 'Freelance'
-    });
-    this.accounts.add({
-        type: 'credit',
-        name: 'Lottery'
-    });
-    this.accounts.add({
         type: 'debit',
         name: 'Restaurants'
     });
