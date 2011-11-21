@@ -564,7 +564,7 @@ DailyFinance.prototype.initialize = function()
     this.featureBar = new FeatureBar();
 
     // Pretend to be a user
-    //this.runScriptedUser();
+    this.runScriptedUser();
 }
 DailyFinance.prototype.runScriptedUser = function()
 {
@@ -575,14 +575,6 @@ DailyFinance.prototype.runScriptedUser = function()
         c1: {
             type: 'credit',
             account_cid: this.accounts.getCidByName('Paycheques')
-        },
-        c2: {
-            type: 'credit',
-            account_cid: this.accounts.getCidByName('Freelance')
-        },
-        c3: {
-            type: 'credit',
-            account_cid: this.accounts.getCidByName('Lottery')
         },
         d1: {
             type: 'debit',
@@ -643,16 +635,6 @@ DailyFinance.prototype.runScriptedUser = function()
     }
 
     enqueu('c1', 1000, new Date(2011, 1, 1));
-    enqueu('c2', 2000, new Date(2011, 1, 2));
-    enqueu('c3', 5000, new Date(2011, 2, 1));
-    enqueu('d1', 100.55, new Date(2011, 2, 1));
-    enqueu('c1', 1000);
-    enqueu('c2', 2000);
-    enqueu('c3', 5000);
-    enqueu('d1', 100.55);
-    //enqueu('d1', 500);
-    //enqueu('c1', 250);
-    //enqueu('d1', 500);
 
     deque();
 }

@@ -32,10 +32,11 @@ body { min-width:960px; background:url('../image/bg-tile.jpg');}
 /* Status Bar */
 
 #status-bar { height:38px; background:rgba(255,255,255,.1); border-bottom:1px solid #333;
-    font-size:1.5em; line-height:38px; color:#444; }
-#status-bar .saved { float:left; margin-left:30px;  }
-#status-bar .spent { float:right; margin-right:30px; }
-#status-bar span { color:#999; }
+    font-size:1.5em; line-height:38px; color:#999; }
+#status-bar .saved { float:left; margin-left:30px; text-transform:uppercase; text-decoration:underline; }
+#status-bar .spent { float:right; margin-right:30px; text-transform:uppercase; text-decoration:underline; }
+#status-bar span { color:#fff; }
+#status-bar .summary { position:absolute; left:50%; top:0px; margin-left:-150px; width:300px; }
 
 /* Wall */
 
