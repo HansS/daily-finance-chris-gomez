@@ -564,7 +564,7 @@ DailyFinance.prototype.initialize = function()
     this.featureBar = new FeatureBar();
 
     // Pretend to be a user
-    this.runScriptedUser();
+    //this.runScriptedUser();
 }
 DailyFinance.prototype.runScriptedUser = function()
 {
