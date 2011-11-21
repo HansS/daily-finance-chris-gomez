@@ -20,9 +20,14 @@
 .full-height-column-container { background-color:#C43C35 } /* FIX: 50% 1px shy bug */
 .full-height-column { padding-bottom:10000px; margin-bottom:-10000px; }
 
-.workspace { position:relative; }
+#workspace { position:relative; }
 
-.history { position:absolute; left:50%; top:0px; margin-left:-250px!important; width:500px; }
+.jspVerticalBar { width:5px; }
+.jspVerticalBar .jspTrack { background-color:rgba(255,255,255,0.25); }
+.jspVerticalBar .jspTrack .jspDrag { background-color:rgba(255,255,255,0.25); }
+
+.history { position:absolute; left:50%; top:0px; margin-left:-250px!important; width:500px;
+    overflow:auto; }
 .history li { color:#000; }
 
 .accounts { float:left; width:50%; }

@@ -17,6 +17,7 @@
 
     <!-- Vendor Styles -->
     <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/jquery.jscrollpane.css">
 
     <!-- Internal Styles -->
     <link rel="stylesheet" href="./css/main.css">
@@ -29,6 +30,9 @@
     <script type="text/javascript" src="./js/backbone-min.js"></script>
     <script type="text/javascript" src="./js/backbone.modelbinding.min.js"></script>
     <script type="text/javascript" src="./js/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="./js/moment.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="./js/jquery.jscrollpane.min.js"></script>
 
     <!-- Internal Scripts -->
     <script type="text/javascript" src="./js/main.js"></script>
@@ -73,9 +77,9 @@
             </form>
         </div>
 
-        <div class="workspace">
-            <ul id="transaction-history" class="history unstyled">
-            </ul>
+        <div id="workspace">
+            <div id="transaction-wall" class="history unstyled scroll-pane-arrows">
+            </div>
             <div id="income-scale" class="full-height-column-container">
                 <div class="accounts credit full-height-column">
                     <ul id="credit-accounts" class="unstyled">
@@ -159,7 +163,8 @@
                 Amount: <span data-bind="amount"></span><br />
                 Type: <span data-bind="type"></span><br />
                 Category CID: <span data-bind="account_cid"></span><br />
-                Description: <span data-bind="description"></span>
+                Description: <span data-bind="description"></span><br />
+                Recorded: <span data-bind="created_at"></span>
             </dd>
         </dl>
     </script>

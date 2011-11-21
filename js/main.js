@@ -58,16 +58,28 @@ var Account = Backbone.Model.extend({
 });
 
 /**
- * TransactionHistory
+ * TransactionLog
  *
  * A collection of Transaction Models
  **/
-var TransactionHistory = Backbone.Collection.extend({
+var TransactionLog = Backbone.Collection.extend({
     model: Transaction,
     initialize: function()
     {
+        this.bind('add', this.tagDateOnAdd, this);
         this.bind('add', this.createTransactionRecord, this);
         this.bind('add', this.distributeFunds, this);
+    },
+    tagDateOnAdd: function(model)
+    {
+        // We likely wanted to override the auto date tagging
+        if (model.has('created_at')) {
+            return;
+        }
+
+        model.set({
+            created_at: new Date()
+        })
     },
     createTransactionRecord: function(model)
     {
@@ -225,16 +237,81 @@ var AccountStatus = Backbone.View.extend({
  * A line item for a transaction
  **/
 var TransactionRecord = Backbone.View.extend({
-    tagName: 'li',
+    tagName: 'div',
     initialize: function()
     {
         // Add the markup to this.el
         $(this.el).html($('#transaction-template').html());
 
         // Add the transaction to the list
-        $('#transaction-history').prepend(this.el);
+        App.transactionWall.insertRecord(this);
 
         Backbone.ModelBinding.bind(this);
+    }
+})
+
+
+/**
+ * TransactionWall
+ *
+ * A list of organized transactions
+ **/
+var TransactionWall = Backbone.View.extend({
+    el: '#transaction-wall',
+    initialize: function()
+    {
+        // Pretty up the standard scrollbars
+        $(this.el).jScrollPane();
+
+        this.pane = $(this.el).find('.jspPane');
+    },
+    insertRecord: function(transactionRecord)
+    {
+        // This is a WAY hacky way for me to insert headings into the wall
+        // regarding the times the transactions where recorded. It could
+        // probably have been automated and there's no good reason to have
+        // HTML in my script
+        var date = transactionRecord.model.get('created_at');
+
+        var year = moment(date).year();
+        var month = moment(date).month();
+        var day = moment(date).day();
+
+        var yearKey = year;
+        var monthKey = [year, month].join('-');
+        var dayKey = [year, month, day].join('-');
+
+        var yearHeadingId = '#heading-' + yearKey;
+        var monthHeadingId = '#heading-' + monthKey;
+        var dayHeadingId = '#heading-' + dayKey;
+
+        if (! $(yearHeadingId).length) {
+            $(this.pane).prepend(
+                '<h1 id="heading-' + yearKey + '">'
+                    + moment(date).format('YYYY')
+                + '</h1>')
+
+        }
+
+        if (! $(monthHeadingId).length) {
+            $(yearHeadingId).after(
+                '<h2 id="heading-' + monthKey + '">'
+                    + moment(date).format('MMMM')
+                + '</h2>')
+        }
+
+        if (! $(dayHeadingId).length) {
+            $(monthHeadingId).after(
+                '<h3 id="heading-' + dayKey + '">'
+                    + moment(date).format('dddd')
+                + '</h3>')
+        }
+
+        // Add the actual record to the list
+        $(dayHeadingId).after(transactionRecord.el);
+
+        // Let the scrollbar plugin know that it likely has a new height
+        $(this.el).data('jsp').reinitialise()
     }
 })
 
@@ -293,23 +370,6 @@ var TransactionForm = Backbone.View.extend({
 
         // validate
 
-        /*var amount = this.model.get('amount');
-        var targetAccount = App.accounts
-            .getByCid(this.model.get('account_cid'));
-
-        targetAccount.deposit(amount);
-
-        if (this.model.get('type') == 'debit') {
-            var accounts = App.accounts.getByType('credit');
-            var portions = App.util.divideEvenly(amount, accounts.length);
-
-            for (var index in accounts) {
-                var account = accounts[index];
-                var portion = portions.shift();
-                account.withdraw(portion);
-            }
-        }*/
-
         // Unbind the model/view, they're done with each other
         Backbone.ModelBinding.unbind(this);
 
@@ -330,7 +390,7 @@ function DailyFinance()
 {
 }
 DailyFinance.prototype.accounts = new Bank();
-DailyFinance.prototype.transactions = new TransactionHistory();
+DailyFinance.prototype.transactions = new TransactionLog();
 DailyFinance.prototype.initialize = function()
 {
     // Initial render();
@@ -390,7 +450,8 @@ DailyFinance.prototype.initialize = function()
 
     // Setup any predefined Views that need to wait for DOM ready
     // Note: Has to happen after model population
-    this.transactionForm= new TransactionForm();
+    this.transactionForm = new TransactionForm();
+    this.transactionWall = new TransactionWall();
     this.featureBar = new FeatureBar();
 
     // Pretend to be a user
@@ -441,11 +502,12 @@ DailyFinance.prototype.runScriptedUser = function()
     }
 
     // And this is just a super lazy way of setting the remaining attributes
-    function enqueu(accountCid, amount, description)
+    function enqueu(accountCid, amount, date, description)
     {
         var transaction = _.clone(accountsByCid[accountCid]);
         transaction.amount = amount;
         transaction.description = description;
+        transaction.created_at = date;
 
         queue.push(transaction);
     }
@@ -467,10 +529,10 @@ DailyFinance.prototype.runScriptedUser = function()
         }, 2000);
     }
 
-    enqueu('c1', 1000);
-    enqueu('c2', 2000);
-    enqueu('c3', 5000);
-    enqueu('d1', 100.55);
+    enqueu('c1', 1000, new Date(2011, 1, 1));
+    enqueu('c2', 2000, new Date(2011, 1, 2));
+    enqueu('c3', 5000, new Date(2011, 2, 1));
+    enqueu('d1', 100.55, new Date(2011, 2, 1));
     //enqueu('d1', 500);
     //enqueu('c1', 250);
     //enqueu('d1', 500);
@@ -486,7 +548,11 @@ DailyFinance.prototype.render = function()
     var workspaceHeight = windowHeight - (headerHeight + footerHeight) + 'px';
 
     $('#income-scale').css({ height: workspaceHeight });
-    $('#transaction-history').css({ height: workspaceHeight });
+    $('#transaction-wall').css({ height: workspaceHeight });
+
+    if (App.transactionWall) {
+        $(App.transactionWall.el).data('jsp').reinitialise()
+    }
 }
 DailyFinance.prototype.util = {
     divideEvenly: function(amount, divisor)
