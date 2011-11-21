@@ -34,7 +34,11 @@
 .debit { background:#C43C35 url('../image/minus-pattern.jpg') right top repeat;; }
 .debit ul li { clear:both; float:right; }
 
-.functions { clear:both; padding:0 10px; background:#666; }
-.functions .pills-label { float:left; margin:0 10px 0 0; line-height:3em; color:#ccc; }
-.functions .pills { float:left; margin-bottom:0; }
-.functions .btn { float:right; margin:6px 0 0 0; vertical-align:middle; }
+#footer { clear:both; }
+
+.features { padding:0 10px; background:#666; }
+.features .pills-label { float:left; margin:0 10px 0 0; line-height:3em; color:#ccc; }
+.features .pills { float:left; margin-bottom:0; }
+.features .btn { float:right; margin:6px 0 0 0; vertical-align:middle; }
+
+#category-modal { display:none; }

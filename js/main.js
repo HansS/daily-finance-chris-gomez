@@ -104,7 +104,6 @@ var TransactionHistory = Backbone.Collection.extend({
     }
 })
 
-
 /**
  * Bank
  *
@@ -144,6 +143,42 @@ var Bank = Backbone.Collection.extend({
         })
     }
 });
+
+/**
+ * FeatureBar
+ *
+ * All the buttons at the bottom of the page
+ **/
+var FeatureBar = Backbone.View.extend({
+    el: '#feature-bar',
+    events: {
+        //'click #create-category-btn': 'addCategory'
+    },
+    initialize: function()
+    {
+        // Strange.. I couldn't get the backbone events feature working. Works
+        // elsewhere.. ?
+        $('#create-category-btn').click(this.addCategory);
+
+        $('#open-category-modal-btn').click(this.focusOnModalInput);
+    },
+    focusOnModalInput: function() {
+        // This should work!
+        $('input#category_name').focus();
+    },
+    addCategory: function()
+    {
+        var nameInput = $('#category_name');
+        var typeInput = $('#category_type');
+
+        App.accounts.add({
+            name: nameInput.val(),
+            type: typeInput.val()
+        })
+
+        $('#category-modal').modal('hide');
+    }
+})
 
 /**
  * AccountStatus
@@ -356,8 +391,9 @@ DailyFinance.prototype.initialize = function()
     // Setup any predefined Views that need to wait for DOM ready
     // Note: Has to happen after model population
     this.transactionForm= new TransactionForm();
+    this.featureBar = new FeatureBar();
 
-    // Fun!
+    // Pretend to be a user
     this.runScriptedUser();
 }
 DailyFinance.prototype.runScriptedUser = function()

@@ -28,7 +28,7 @@
     <script type="text/javascript" src="./js/underscore-min.js"></script>
     <script type="text/javascript" src="./js/backbone-min.js"></script>
     <script type="text/javascript" src="./js/backbone.modelbinding.min.js"></script>
-    <script type="text/javascript" src="./js/d3.js"></script>
+    <script type="text/javascript" src="./js/bootstrap-modal.js"></script>
 
     <!-- Internal Scripts -->
     <script type="text/javascript" src="./js/main.js"></script>
@@ -88,21 +88,61 @@
             </div>
         </div>
 
-        <div id="footer" class="functions clearfix">
-            <div class="pills-label">Scope:</div>
-            <ul class="pills">
-                <li class="active">
-                    <a href="#">Day</a>
-                </li>
-                <li>
-                    <a href="#">Month</a>
-                </li>
-                <li>
-                    <a href="#">Year</a>
-                </li>
-            </ul>
+        <div id="footer">
+            <div id="feature-bar" class="features clearfix">
+                <div class="pills-label">Scope:</div>
+                <ul class="pills">
+                    <li class="active">
+                        <a href="#">Day</a>
+                    </li>
+                    <li>
+                        <a href="#">Month</a>
+                    </li>
+                    <li>
+                        <a href="#">Year</a>
+                    </li>
+                </ul>
 
-            <button class="btn">Add a Category</button>
+                <button id="open-category-modal-btn" data-controls-modal="category-modal" data-backdrop="true" data-keyboard="true" class="btn">
+                    Add a Category
+                </button>
+
+                <div id="category-modal" class="modal hide fade">
+                    <div class="modal-header">
+                        <a href="#" class="close">×</a>
+                        <h3>Add a Category</h3>
+                    </div>
+                    <div class="modal-body">
+
+                        <form id="category-form">
+
+
+                            <div class="clearfix">
+                                <label for="category_name">Name:</label>
+                                <div class="input">
+                                    <input id="category_name" type="text" />
+                                </div>
+                            </div>
+
+                            <div class="clearfix">
+                                <label for="category_type">Type:</label>
+                                <div class="input">
+                                    <select id="category_type">
+                                        <option value="credit">Income</option>
+                                        <option value="debit">Expense</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button id="create-category-btn" class="btn primary">Create Category</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
